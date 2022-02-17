@@ -1,4 +1,5 @@
 *.zip
 build
-flp21-fun
-test/extra/
+*flp21-fun
+.vscode/
+*py*cache*

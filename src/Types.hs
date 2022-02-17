@@ -8,8 +8,8 @@ module Types where
 -- newtype Params = Params { file :: String } deriving (Show)
 -- new
 data Params = Params { 
-    file :: String
-    , mode1 :: Bool
-    , mode2 :: Bool
-    , i :: Bool 
+    file :: String,
+    mode1 :: Bool,
+    mode2 :: Bool,
+    i :: Bool 
     } deriving (Show)

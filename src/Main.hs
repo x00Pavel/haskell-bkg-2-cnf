@@ -12,10 +12,17 @@ main :: IO ()
 main = do
     args <- getArgs
     let param = argsParse args
-    print param
     let fileName = getFileName param
-    cnt <- readFile fileName
-    putStr cnt
+    print param
+    cnt <- readFile' fileName 
+    putStrLn cnt
 
 getFileName :: Params -> String
 getFileName = file
+
+readFile' :: String -> IO String
+readFile' x = case x of
+    "stdin" -> do putStrLn "Reading from STDIN\n"
+                  getContents
+    _       -> do putStrLn "Reading from file"
+                  readFile x 

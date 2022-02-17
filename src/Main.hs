@@ -4,7 +4,18 @@
 -- Rok: 2021/2022
 
 module Main where
+import System.Environment ( getArgs )
+import ParseInput ( argsParse )
+import Types (Params (file))
 
 main :: IO ()
 main = do
-    print "Helo world"
+    args <- getArgs
+    let param = argsParse args
+    print param
+    let fileName = getFileName param
+    cnt <- readFile fileName
+    putStr cnt
+
+getFileName :: Params -> String
+getFileName = file

@@ -5,8 +5,7 @@
 
 module Types where
 
--- newtype Params = Params { file :: String } deriving (Show)
--- new
+-- Representation of input parameters
 data Params = Params { 
     file :: String,
     mode1 :: Bool,

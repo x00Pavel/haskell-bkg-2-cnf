@@ -5,7 +5,7 @@
 
 module ParseInput where
 import Types (Params (Params), file, mode1, mode2, i)
-import Data.Char
+import Data.Char ( isLower, isUpper )
 
 -- Parse command line arguments -- 
 argsParse :: [String] -> Params
@@ -34,17 +34,19 @@ checkName x
     | head x == '-' = error "Not valid name"
     | otherwise = x
 
-
+-- Validates input content -- 
 validateContent :: String -> Bool
 validateContent [] = error "Empty string"
 validateContent x = validateHeader $ take 3 $ lines x
 
+-- Validates header (first 3 lines) of the file --
 validateHeader :: [String] -> Bool
 validateHeader [x, y, z]
     | isUpper' x && isLower' y && length z == 1 && head z `elem` x = True
     | otherwise = error "Wrong header"
 validateHeader _ = error "Wrong header"
 
+-- Custom function isUpper that skips commas and spaces --
 isUpper' :: String -> Bool
 isUpper' x
     | (h == ',' || h == ' ')  && not (null t) = isUpper' t
@@ -55,6 +57,7 @@ isUpper' x
         h = head x
         t = tail x
 
+-- Custom function isLower that skips commas and spaces --
 isLower' :: String -> Bool
 isLower' x
     | (h == ',' || h == ' ')  && not (null t) = isLower' t

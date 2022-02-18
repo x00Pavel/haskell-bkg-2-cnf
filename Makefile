@@ -14,7 +14,7 @@ testbuild:
 	ghc ${OPTS} src/* -o ${TEST_DEST_O} -hidir ${BUILD_DIR} -odir ${BUILD_DIR}
 
 test:
-	cd extra/ && pytest * -sv
+	cd extra/ && pytest ./ -sv
 
 run: make
 	./${PROJ_NAME} test/test01.in -i

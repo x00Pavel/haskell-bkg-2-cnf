@@ -51,6 +51,7 @@ validateContent x = Language {nonTerms=nt, terms=t, startNonTerm=s, rules=rls}
         (nt, t, s) = validateHeader header
         rls = validateRules rs nt t
 
+
 -- Validates header (first 3 lines) of the file --
 validateHeader :: [String] -> ([Char], [Char], Char)
 validateHeader [x, y, z]
@@ -61,6 +62,7 @@ validateHeader [x, y, z]
         t = filter (`elem` ['a'..'z']) y
         s = head z
 validateHeader _ = error "Wrong header"
+
 
 -- Validates rules format A -> subset of terminals and non-terminals -- 
 validateRules :: [String] -> String -> String -> [Rule]
@@ -99,6 +101,7 @@ isUpper' x
     where
         h = head x
         t = tail x
+
 
 -- Custom function isLower that skips commas and spaces --
 isLower' :: String -> Bool

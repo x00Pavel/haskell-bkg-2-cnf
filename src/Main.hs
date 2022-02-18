@@ -6,7 +6,8 @@
 module Main where
 import System.Environment ( getArgs )
 import ParseInput ( argsParse, validateContent )
-import Types (Params, file)
+import Types (Params, file, i, showLanguage)
+import qualified Control.Monad
 
 main :: IO ()
 main = do
@@ -15,17 +16,24 @@ main = do
     let fileName = getFileName param
     cnt <- readFile' fileName
     let lang = validateContent cnt
-    print lang
+    Control.Monad.when (getIMode param) $ showLanguage lang
 
+
+-- Get file name from Params
 getFileName :: Params -> String
 getFileName = file
 
+-- Get value for -i parameter --
+getIMode :: Params -> Bool
+getIMode = i
+
+
+-- Read content from STDIN or from the file --
 readFile' :: String -> IO String
 readFile' x = case x of
-    "stdin" -> do logMsg "Reading from STDIN\n"
-                  getContents
-    _       -> do logMsg "Reading from file\n"
-                  readFile x 
+    "stdin" -> do getContents
+    _       -> do readFile x
+                  
 
 logMsg :: String -> IO ()
 logMsg = putStrLn

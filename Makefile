@@ -17,7 +17,7 @@ test:
 	cd extra/ && pytest * -sv
 
 run: make
-	./${PROJ_NAME}
+	./${PROJ_NAME} test/test01.in -i
 
 clean:
 	rm -rf ${BUILD_DIR} `find ./ -name "*${PROJ_NAME}"` `find ./ -name "*py*cache*"`

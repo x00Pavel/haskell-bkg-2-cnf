@@ -5,7 +5,7 @@
 
 module Main where
 import System.Environment ( getArgs )
-import ParseInput ( argsParse )
+import ParseInput ( argsParse, validateContent )
 import Types (Params (file))
 
 main :: IO ()
@@ -14,8 +14,9 @@ main = do
     let param = argsParse args
     let fileName = getFileName param
     print param
-    cnt <- readFile' fileName 
-    putStrLn cnt
+    cnt <- readFile' fileName
+    let valid = validateContent cnt
+    print valid
 
 getFileName :: Params -> String
 getFileName = file

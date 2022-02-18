@@ -4,12 +4,17 @@ OPTS=-Wall
 LOGIN=xyadlo00
 TEST_DEST_O=extra/${PROJ_NAME}
 
+.PHONY: make test clean run
+
 make:
 	mkdir -p ${BUILD_DIR}
 	ghc ${OPTS} src/* -o ${PROJ_NAME} -hidir ${BUILD_DIR} -odir ${BUILD_DIR}
 
 testbuild:
 	ghc ${OPTS} src/* -o ${TEST_DEST_O} -hidir ${BUILD_DIR} -odir ${BUILD_DIR}
+
+test:
+	cd extra/ && pytest * -sv
 
 run: make
 	./${PROJ_NAME}

@@ -5,7 +5,7 @@
 
 module ParseInput where
 import Types (Params (Params), file, mode1, mode2, i,
-              Language (Language), terms, nonTerms, startNonTerm, rules,
+              Grammar (Grammar), terms, nonTerms, startNonTerm, rules,
               Rule (Rule))
 import Data.Char ( isLower, isUpper )
 import Data.List ( stripPrefix )
@@ -43,9 +43,9 @@ checkName x
 
 
 -- Validates input content -- 
-validateContent :: String -> Language
+validateContent :: String -> Grammar
 validateContent [] = error "Empty string"
-validateContent x = Language {nonTerms=nt, terms=t, startNonTerm=s, rules=rls}
+validateContent x = Grammar {nonTerms=nt, terms=t, startNonTerm=s, rules=rls}
     where
         (header, rs) = splitAt 3 $ lines x
         (nt, t, s) = validateHeader header

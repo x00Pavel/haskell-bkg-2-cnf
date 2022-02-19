@@ -7,6 +7,10 @@ module Types where
 import Data.List (intersperse, intercalate)
 
 
+type NonTerminal = Char
+type Terminal = Char
+type Rules = [Rule]
+
 -- Representation of input parameters --
 data Params = Params {
     file :: String,
@@ -18,23 +22,23 @@ data Params = Params {
 
 -- Representation of the rule
 data Rule = Rule {
-    left :: Char,
+    left :: NonTerminal,
     right :: String
 } deriving (Show)
 
 
 -- Representation of the language --
-data Language = Language {
-    nonTerms :: [Char],
-    terms :: [Char],
-    startNonTerm :: Char,
-    rules :: [Rule]
+data Grammar = Grammar {
+    nonTerms :: [NonTerminal],
+    terms :: [Terminal],
+    startNonTerm :: NonTerminal,
+    rules :: Rules
 } deriving (Show)
 
 
 -- Represents whole language if '-i' is specified -- 
-showLanguage :: Language -> IO () 
-showLanguage (Language nt t s r) = do
+showGrammar :: Grammar -> IO () 
+showGrammar (Grammar nt t s r) = do
     let ntS = "Non-terminals: " ++ intersperse ',' nt ++ "\n"
     let tS = "Terminals: " ++ intersperse ',' t ++ "\n"
     let sS = "Start non-terminal: " ++ [s] ++ "\n"
@@ -45,3 +49,7 @@ showLanguage (Language nt t s r) = do
 -- Transofrms list of rules to one string for printing out --
 showRules :: [Rule] -> String
 showRules x = intercalate "\n\t" (map show x)
+
+isOneNonTerm :: String -> Bool
+isOneNonTerm [] = False
+isOneNonTerm (x:xs) = x `elem` ['A'..'Z'] && null xs

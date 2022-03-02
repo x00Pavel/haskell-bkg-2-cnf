@@ -1,9 +1,8 @@
-Non-terminals: S,A,B
-Terminals: a,b,c,d
-Start non-terminal: S
-Rules:
-	Rule {left = 'S', right = "AB"}
-	Rule {left = 'A', right = "aAb"}
-	Rule {left = 'A', right = "ab"}
-	Rule {left = 'B', right = "cBd"}
-	Rule {left = 'B', right = "cd"}
+S,A,B
+a,b,c,d
+S
+S->AB
+A->aAb
+A->ab
+B->cBd
+B->cd

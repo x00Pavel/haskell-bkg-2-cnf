@@ -24,7 +24,7 @@ data Params = Params {
 data Rule = Rule {
     left :: NonTerminal,
     right :: String
-} deriving (Show)
+} deriving (Show,  Eq, Ord)
 
 
 -- Representation of the language --
@@ -37,18 +37,18 @@ data Grammar = Grammar {
 
 
 -- Represents whole language if '-i' is specified -- 
-showGrammar :: Grammar -> IO () 
+showGrammar :: Grammar -> IO ()
 showGrammar (Grammar nt t s r) = do
-    let ntS = "Non-terminals: " ++ intersperse ',' nt ++ "\n"
-    let tS = "Terminals: " ++ intersperse ',' t ++ "\n"
-    let sS = "Start non-terminal: " ++ [s] ++ "\n"
-    let rlS = "Rules:\n\t" ++ showRules r
-    -- let rlS = "Rules:\n" ++ intersperse '\n' (showRules r)
+    let ntS = intersperse ',' nt ++ "\n"
+    let tS = intersperse ',' t ++ "\n"
+    let sS = s : "\n"
+    let rlS = showRules r
     putStrLn (ntS ++ tS ++ sS ++ rlS)
 
 -- Transofrms list of rules to one string for printing out --
 showRules :: [Rule] -> String
-showRules x = intercalate "\n\t" (map show x)
+showRules x = intercalate "\n" (map (\(Rule l r) -> [l] ++ "->" ++ r ) x)
+
 
 isOneNonTerm :: String -> Bool
 isOneNonTerm [] = False

@@ -6,10 +6,11 @@
 module ParseInput where
 import Types (Params (Params), file, mode1, mode2, i,
               Grammar (Grammar), terms, nonTerms, startNonTerm, rules,
-              Rule (Rule))
+              Rule (Rule), NonTerminal, Terminal)
 import Data.Char ( isLower, isUpper )
-import Data.List ( stripPrefix )
+import Data.List ( stripPrefix, isInfixOf )
 import Data.Maybe ( fromMaybe)
+-- import Debug.Trace (traceShow, traceShowId)
 
 
 -- Parse command line arguments -- 
@@ -53,39 +54,50 @@ validateContent x = Grammar {nonTerms=nt, terms=t, startNonTerm=s, rules=rls}
 
 
 -- Validates header (first 3 lines) of the file --
-validateHeader :: [String] -> ([Char], [Char], Char)
+validateHeader :: [String] -> ([NonTerminal], [Terminal], NonTerminal )
 validateHeader [x, y, z]
-    | isUpper' x && isLower' y && length z == 1 && s `elem` x = (nt, t, s)
+    -- functions isUpeer' / isLower' insures that string contains only leeters,
+    -- coma or space. If string whould contain anything else, than program
+    -- would end with an error in those functions
+    | isUpper' x && isLower' y && length z == 1 && s `elem` x = (nt, t, [s])
     | otherwise = error "Wrong header"
     where
-        nt =  filter (`elem` ['A'..'Z']) x
+        nt = map charToStr (filter (`elem` ['A'..'Z']) x)
         t = filter (`elem` ['a'..'z']) y
         s = head z
-validateHeader _ = error "Wrong header"
+validateHeader _ = error "Wrong header format"
+
+
+-- Convert one char to string --
+charToStr :: Char -> String
+charToStr c = [c]
 
 
 -- Validates rules format A -> subset of terminals and non-terminals -- 
-validateRules :: [String] -> String -> String -> [Rule]
-validateRules xs n t = map (\ x -> validateR x n t) xs
+validateRules :: [String] -> [NonTerminal] -> [Terminal] -> [Rule]
+validateRules xs ns ts = [validateOneRule x ns ts | x <- xs]
 
--- Parse individual rule base of form A -> X where each char in X is in NT ++ Sigma --
-validateR :: String -> String -> String -> Rule
-validateR r n t
-    | (head r' `elem` n) && checkSubstr l (n ++ t) = Rule h l
+
+-- Parse individual rule base on form A -> X where each char in X is in NT ++ Sigma --
+validateOneRule :: String -> [String] -> [Terminal] -> Rule
+validateOneRule r ns ts
+    | (leftSide `elem` ns) && checkSubstr rightSide ns ts  = Rule leftSide rightSide
     | otherwise = error ("Wrong rule: " ++ show r')
     where
-        r' = filter (/= ' ') r
-        h = head r'
-        l = stripPrefix' (h : "->") r'
+        r' = filter (/= ' ') r -- remove spaces from the rule
+        leftSide = take 1 r'
+        rightSide =  stripPrefix' (leftSide ++ "->") r'
 
 
 -- Checks if each character from the string is an element of the given list
-checkSubstr :: String -> [Char] ->Bool
-checkSubstr substr lst = all ((== True ) . (`elem` lst)) substr || error ("String " ++ substr ++ " is not subset of " ++ lst)
+checkSubstr :: String -> [NonTerminal] -> [Terminal] -> Bool
+checkSubstr substr ns ts = all (== True )  [[x] `elem` ns || x `elem` ts | x <- substr] || error msg
+     where
+         msg = "String " ++ substr ++ " is not subset of non terminal and tetminals"
 
 
 -- Get left side of the rule. Prefix has to be 'A->' --
-stripPrefix' :: String  -> String -> String
+stripPrefix' :: String -> String -> String
 stripPrefix' x y = fromMaybe (error ("Wrong prefix of the rule: " ++ y ++ "\n" ++ x ++ " not in " ++ y)) a
     where
         a = stripPrefix x y
@@ -94,7 +106,7 @@ stripPrefix' x y = fromMaybe (error ("Wrong prefix of the rule: " ++ y ++ "\n" +
 -- Custom function isUpper that skips commas and spaces --
 isUpper' :: String -> Bool
 isUpper' x
-    | (h == ',' || h == ' ')  && not (null t) = isUpper' t
+    | (h == ',' || h == ' ')  && not (null t) = isUpper' t -- if current char is comma or space and tail is not empty -> continue with tail
     | isUpper h && not (null t) = isUpper' t
     | isUpper h = True
     | otherwise = False
@@ -106,8 +118,8 @@ isUpper' x
 -- Custom function isLower that skips commas and spaces --
 isLower' :: String -> Bool
 isLower' x
-    | (h == ',' || h == ' ')  && not (null t) = isLower' t
-    | isLower h && not (null t) = isLower' t
+    | (h == ',' || h == ' ')  && not (null t) = isLower' t -- if current char is comma or space and tail is not empty -> continue with tail
+    | isLower h && not (null t) = isLower' t 
     | isLower h = True
     | otherwise = False
     where

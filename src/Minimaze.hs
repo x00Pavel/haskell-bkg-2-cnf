@@ -46,6 +46,6 @@ findNotSimpleRules rls nt = filter (\r -> (left r == nt) && not (isOneNonTerm (r
 
 -- Find not simple rules for given non-terminal in format A -> B -- 
 findSimpleRules :: Rules -> NonTerminal -> [NonTerminal]
-findSimpleRules rls nt = [head $ right x | x <- simpleRls]
+findSimpleRules rls nt = [take 1 $ right x | x <- simpleRls]
     where
         simpleRls = filter (\r -> (left r == nt) && isOneNonTerm (right r)) rls

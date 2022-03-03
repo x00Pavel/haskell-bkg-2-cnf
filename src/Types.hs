@@ -6,8 +6,8 @@
 module Types where
 import Data.List (intersperse, intercalate)
 
-
-type NonTerminal = Char
+data NonTerm = NonTerm String | SingleNonTerm Char
+type NonTerminal = String
 type Terminal = Char
 type Rules = [Rule]
 
@@ -39,17 +39,20 @@ data Grammar = Grammar {
 -- Represents whole language if '-i' is specified -- 
 showGrammar :: Grammar -> IO ()
 showGrammar (Grammar nt t s r) = do
-    let ntS = intersperse ',' nt ++ "\n"
+    let ntS = intercalate "," nt ++ "\n"
     let tS = intersperse ',' t ++ "\n"
-    let sS = s : "\n"
+    let sS = s ++ "\n"
     let rlS = showRules r
     putStrLn (ntS ++ tS ++ sS ++ rlS)
 
 -- Transofrms list of rules to one string for printing out --
 showRules :: [Rule] -> String
-showRules x = intercalate "\n" (map (\(Rule l r) -> [l] ++ "->" ++ r ) x)
+showRules x = intercalate "\n" (map (\(Rule l r) -> l ++ "->" ++ r ) x)
 
 -- Check if given string contains only one non-teminal -- 
 isOneNonTerm :: String -> Bool
 isOneNonTerm [] = False
 isOneNonTerm (x:xs) = x `elem` ['A'..'Z'] && null xs
+
+charToNonTerminal :: Char -> NonTerminal
+charToNonTerminal c = [c]

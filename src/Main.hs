@@ -32,15 +32,18 @@ main = do
 getFileName :: Params -> String
 getFileName = file
 
+
 -- Get value for -i parameter --
 getIMode :: Params -> Bool
 getIMode = i
 
 
+-- Ger flaf -1 -- 
 get1Mode :: Params -> Bool
 get1Mode = mode1
 
 
+-- Get flag -2 -- 
 get2Mode :: Params -> Bool
 get2Mode = mode2
 
@@ -50,7 +53,3 @@ readFile' :: String -> IO String
 readFile' x = case x of
     "stdin" -> do getContents
     _       -> do readFile x
-                  
-
-logMsg :: String -> IO ()
-logMsg = putStrLn

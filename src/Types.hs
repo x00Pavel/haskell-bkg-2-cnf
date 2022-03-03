@@ -49,7 +49,7 @@ showGrammar (Grammar nt t s r) = do
 showRules :: [Rule] -> String
 showRules x = intercalate "\n" (map (\(Rule l r) -> [l] ++ "->" ++ r ) x)
 
-
+-- Check if given string contains only one non-teminal -- 
 isOneNonTerm :: String -> Bool
 isOneNonTerm [] = False
 isOneNonTerm (x:xs) = x `elem` ['A'..'Z'] && null xs

@@ -8,7 +8,7 @@ import System.Environment ( getArgs )
 import ParseInput ( argsParse, validateContent )
 import Types (Params, file, i, mode1, mode2, showGrammar)
 import qualified Control.Monad
-import Minimaze (removeSimpleRules)
+import Minimaze (removeSimpleRules, createCNF)
 
 
 main :: IO ()
@@ -21,11 +21,11 @@ main = do
     let lang = validateContent cnt
     Control.Monad.when (getIMode param) $ showGrammar lang
     
-    let langNoSimpleRls = removeSimpleRules lang
-    Control.Monad.when (get1Mode param) $ showGrammar langNoSimpleRls
+    let gramNoSimpleRls = removeSimpleRules lang
+    Control.Monad.when (get1Mode param) $ showGrammar gramNoSimpleRls
 
-    -- let langCNF = createCNF langNoSimpleRls
-    -- Control.Monad.when (get2Mode param) $ showGrammar langCNF
+    let langCNF = createCNF gramNoSimpleRls
+    Control.Monad.when (get2Mode param) $ showGrammar langCNF
 
 
 -- Get file name from Params
@@ -38,7 +38,7 @@ getIMode :: Params -> Bool
 getIMode = i
 
 
--- Ger flaf -1 -- 
+-- Ger flag -1 -- 
 get1Mode :: Params -> Bool
 get1Mode = mode1
 

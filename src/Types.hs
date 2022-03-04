@@ -6,7 +6,6 @@
 module Types where
 import Data.List (intersperse, intercalate)
 
-data NonTerm = NonTerm String | SingleNonTerm Char
 type NonTerminal = String
 type Terminal = Char
 type Rules = [Rule]
@@ -53,6 +52,12 @@ showRules x = intercalate "\n" (map (\(Rule l r) -> l ++ "->" ++ r ) x)
 isOneNonTerm :: String -> Bool
 isOneNonTerm [] = False
 isOneNonTerm (x:xs) = x `elem` ['A'..'Z'] && null xs
+
+
+isTerm :: String ->Bool
+isTerm [] =  False
+isTerm (t:ts) =  t `elem` ['a'..'z'] && null ts
+
 
 charToNonTerminal :: Char -> NonTerminal
 charToNonTerminal c = [c]

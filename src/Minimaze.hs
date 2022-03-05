@@ -4,8 +4,7 @@
 -- Rok: 2021/2022
 
 module Minimaze where
-import Types (Grammar (Grammar), Rule (left, right, Rule), NonTerminal, Rules, isOneNonTerm, Terminal, isTerm, showRules)
-import Debug.Trace (traceShow)
+import Types (Grammar (Grammar), Rule (left, right, Rule), NonTerminal, Rules, isOneNonTerm, isTerm)
 import Data.List (partition)
 
 -- Remove duplicates from the array --
@@ -52,22 +51,32 @@ findSimpleRules rls nt = [take 1 $ right x | x <- simpleRls]
 
 
 createCNF :: Grammar -> Grammar
-createCNF g@(Grammar nts ts st rls) = Grammar nts' ts st rls'
+createCNF (Grammar nts ts st rls) = Grammar nts' ts st rls'
     where
         (moreThen2, lessThen3) = partition (\(Rule _ r) -> length r > 2) rls
         (equal2, equal1) = partition (\(Rule _ r) -> length r == 2) lessThen3
-        (onlyNonTerm, rest) = partition (\(Rule _ r) -> isOneNonTerm (take 1 r) && isOneNonTerm (tail r)) equal2
-        parts = concatMap (\(Rule l r) -> splitToPart' l r) moreThen2
-        tmp_rls = concatMap (\(s, l, r, rest) -> Rule s (l ++ r) : rest) parts
-        -- extraxt new rules
-        -- s = concatMap snd parts
-        -- rs = concatMap (\(_,_,r) -> r) s
-        -- no_rules = 
-        -- fst_rule = Rule NonTerminal String
+        (onlyNonTerm, rest) = partition (\(Rule _ r) ->
+                                            isOneNonTerm (take 1 r) &&
+                                            isOneNonTerm (tail r)) equal2
 
-        -- tmp_rls = map (\(s, lst) -> Rule s (fst lst!!1 ++ snd lst!!1)) parts
-        nts' = nts
-        rls' = traceShow parts equal1 ++ onlyNonTerm ++ tmp_rls
+        parts = concatMap (\(Rule l r) -> splitToPart' l r) moreThen2
+        parts' = concatMap (\(Rule l r) -> splitDouble l r) rest
+        tmp_rls = uniq $ parts' ++ concatMap (\(s, l, r, rest') -> Rule s (l ++ r) : rest') parts 
+        new_nts = [left r | r <- tmp_rls]
+        nts' = uniq $ nts ++ new_nts
+        rls' = equal1 ++ onlyNonTerm ++ tmp_rls
+
+
+splitDouble :: NonTerminal -> NonTerminal -> Rules
+splitDouble start [l,r]
+    | isTerm [l] && isOneNonTerm [r] = [Rule start (newNonTermL ++ [r]), Rule newNonTermL [l]]
+    | isTerm [r] && isOneNonTerm [l] = [Rule start (l : newNonTermR), Rule newNonTermR [r]]
+    | isTerm [l] && isTerm [r] = [Rule start (newNonTermL ++ newNonTermR), Rule newNonTermL [l], Rule newNonTermR [r]]
+    | otherwise = error "Error in parsing rule in format A -> aB | Ba | aa"
+    where
+        newNonTermL = l : "'"
+        newNonTermR = r : "'"
+splitDouble _ _ = error "Error in parsing rule in format A -> aB | Ba | aa"
 
 
 splitToPart' :: NonTerminal -> NonTerminal -> [(NonTerminal, NonTerminal, NonTerminal, Rules)]

@@ -1,12 +1,13 @@
-S,A,B
+S,A,B,a',<AB>,<BB>
 a,b
 S
-S -> a'<AB>
-S -> BA
-A -> B<BB>
-A -> a
-B -> AS
-B -> b
-<AB> -> AB
-<BB> -> BB
-a' -> a
+A->a
+B->b
+S->BA
+B->AS
+B->a'A
+a'->a
+S->a'<AB>
+<AB>->AB
+A->B<BB>
+<BB>->BB

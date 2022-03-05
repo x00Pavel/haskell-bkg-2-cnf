@@ -3,9 +3,8 @@ a,b
 S
 S -> aAB
 S -> BA
-S -> aB
 A -> BBB
 A -> a
-B -> Ab
 B -> AS
 B -> b
+B->aA

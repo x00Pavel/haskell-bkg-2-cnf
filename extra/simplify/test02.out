@@ -1,0 +1,13 @@
+S,A,B,C,D,E,F
+a,b
+S
+B->Sa
+B->a
+B->bS
+B->SAb
+C->aD
+C->bS
+C->SAb
+D->Ba
+E->aAS
+F->SAb

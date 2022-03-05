@@ -7,6 +7,7 @@ module Minimaze where
 import Types (Grammar (Grammar), Rule (left, right, Rule), NonTerminal, Rules, isOneNonTerm, isTerm)
 import Data.List (partition)
 
+
 -- Remove duplicates from the array --
 uniq :: Eq a => [a] -> [a]
 uniq [] = []
@@ -49,7 +50,7 @@ findSimpleRules rls nt = [take 1 $ right x | x <- simpleRls]
     where
         simpleRls = filter (\r -> (left r == nt) && isOneNonTerm (right r)) rls
 
-
+-- Create CNF from given grammer --
 createCNF :: Grammar -> Grammar
 createCNF (Grammar nts ts st rls) = Grammar nts' ts st rls'
     where
@@ -67,6 +68,7 @@ createCNF (Grammar nts ts st rls) = Grammar nts' ts st rls'
         rls' = equal1 ++ onlyNonTerm ++ tmp_rls
 
 
+-- Split rules in form A -> aB | Ba | aa into rules form CNF --
 splitDouble :: NonTerminal -> NonTerminal -> Rules
 splitDouble start [l,r]
     | isTerm [l] && isOneNonTerm [r] = [Rule start (newNonTermL ++ [r]), Rule newNonTermL [l]]
@@ -79,8 +81,15 @@ splitDouble start [l,r]
 splitDouble _ _ = error "Error in parsing rule in format A -> aB | Ba | aa"
 
 
+-- Split rules in form of A -> X_1 X_2 ... X_n into corresponding parts for CNF --
 splitToPart' :: NonTerminal -> NonTerminal -> [(NonTerminal, NonTerminal, NonTerminal, Rules)]
-splitToPart' start [x,y] = [(start, [x],[y], [])]
+splitToPart' start [x,y]
+    | isTerm [x] && isOneNonTerm [y] = [(start, newNtL,[y], [Rule newNtL [x]])]
+    | isTerm [y] && isOneNonTerm [x] = [(start, [x], newNtR, [Rule newNtR [y]])]
+    | otherwise = [(start, [x],[y], [])]
+    where
+        newNtL = x : "'"
+        newNtR = y : "'"
 splitToPart' start (x:xs)
     | isTerm [x] = (start , newTerm, rest, [Rule newTerm [x]]) : splitToPart' rest xs
     | otherwise = (start, [x], rest, []) : splitToPart' rest xs

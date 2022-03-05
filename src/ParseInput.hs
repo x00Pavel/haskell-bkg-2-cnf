@@ -8,7 +8,7 @@ import Types (Params (Params), file, mode1, mode2, i,
               Grammar (Grammar), terms, nonTerms, startNonTerm, rules,
               Rule (Rule), NonTerminal, Terminal)
 import Data.Char ( isLower, isUpper )
-import Data.List ( stripPrefix, isInfixOf )
+import Data.List ( stripPrefix )
 import Data.Maybe ( fromMaybe)
 -- import Debug.Trace (traceShow, traceShowId)
 

@@ -1,0 +1,19 @@
+Directory extra/ contains extra tests I made for this project. Tests are written
+using Python library for test - PyTest. Main design of the test is following:
+- Before each test run, source code is recompiled
+- Tests are separated to the files based on the aspect each test is checking
+  (e.g test_args.py contains tests for testing correct processing of input
+  arguments, test_cnf.py contains tests for checking that program converts input
+  grammar to CNF with specified rules)
+- Most of the tests contains also input file with input grammar. But not each
+  test contains output file to compare with, because for example for testing
+  of specific rule or non-terminal is present in the output, simple loop
+  with checking substring in the output is used. This approach is more robust
+  to reordering of the rules or non-terminals
+- Input files are also separated to the directories based on the target test.
+  Some input files are duplicated because with same input file, testing target
+  is different (e.g for same grammar there is separate test for removing simple
+  rules and separate test for CNF)
+- Even when some test files visually contains only one test, these test is
+  executed several times with different test arguments (input file and output
+  file) using parametrisation.

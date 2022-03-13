@@ -1,3 +1,8 @@
+# Projekt: Prevod bezkontextové vlastní gramatiky (dále BKG) na bezkontextové gramatiky v Chomského normální formě
+# Nazev: BKG-2-CNF
+# Autor: Pavel Yadlouski (xyadlo00)
+# Rok: 2021/2022
+
 PROJ_NAME=flp21-fun
 BUILD_DIR=build
 OPTS=-Wall
@@ -22,5 +27,5 @@ run: make
 clean:
 	rm -rf ${BUILD_DIR} `find ./ -name "*${PROJ_NAME}"` `find ./ -name "*py*cache*"`
 
-zip:
+zip: clean
 	zip -r flp-fun-$(LOGIN).zip ./* -x .git*

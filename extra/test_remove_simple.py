@@ -1,3 +1,8 @@
+# Projekt: Prevod bezkontextové vlastní gramatiky (dále BKG) na bezkontextové gramatiky v Chomského normální formě
+# Nazev: BKG-2-CNF
+# Autor: Pavel Yadlouski (xyadlo00)
+# Rok: 2021/2022
+
 from extra import PROG
 from extra.conftest import file_in_file_out
 from subprocess import check_output, PIPE
